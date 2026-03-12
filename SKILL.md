@@ -110,19 +110,51 @@ git clean, gcloud projects delete, gcloud billing, dropdb, mysqladmin drop)
 Default execution command:
 
 ```bash
-/Users/cesarlandin/.nvm/versions/node/v24.13.0/bin/codex exec "<prompt>" \
+export PATH="/Users/cesarlandin/.nvm/versions/node/v24.13.0/bin:$PATH" && \
+codex exec \
   --sandbox workspace-write \
-  --ask-for-approval on-request \
+  --full-auto \
   --cd <absolute path of current project directory> \
-  --output-last-message /tmp/codex-last-msg.md
+  --output-last-message /tmp/codex-last-msg.md \
+  "<prompt>"
 ```
 
-Sandbox and approval behavior:
+Key flags:
 - `--sandbox workspace-write` — file reads/writes bounded to the workspace; prevents Codex from touching the filesystem outside the project
-- `--ask-for-approval on-request` — Codex prompts the user for shell commands. Because approved commands are listed explicitly in the prompt, Codex should run those freely. Any command *not* in the approved list will trigger a user prompt from Codex's side as a fallback safety layer.
+- `--full-auto` — runs without requiring user intervention for approved commands (equivalent to the removed `--ask-for-approval on-request`). Because approved commands are listed explicitly in the prompt, Codex runs those freely.
 - The deny list is enforced at two layers: in the prompt's HARD CONSTRAINTS (model-level) and in Claude's post-execution review (Step 6)
+- The PATH export is required because `codex` depends on the `node` runtime from nvm, which isn't on the default shell PATH
+
+**Notes:**
+- `--ask-for-approval` no longer exists in `codex exec` — use `--full-auto` instead
+- Codex's `workspace-write` sandbox cannot write to `/Applications`. For projects where `./build.sh --install` copies to `/Applications`, run that command (and any relaunch) manually after Codex completes.
+- Pass the prompt as the **last** argument after all flags, not as the first argument
 
 **Never use `--sandbox danger-full-access` unless the user explicitly requests it.**
+
+### Parallel execution
+
+To run two independent Codex sessions in parallel, launch both with `run_in_background: true` in separate Bash tool calls, then collect both results:
+
+```bash
+# Session A (background)
+export PATH="...nvm.../bin:$PATH" && codex exec --sandbox workspace-write --full-auto \
+  --cd <project> --output-last-message /tmp/codex-a.md "<prompt A>"
+
+# Session B (background, launched simultaneously)
+export PATH="...nvm.../bin:$PATH" && codex exec --sandbox workspace-write --full-auto \
+  --cd <project> --output-last-message /tmp/codex-b.md "<prompt B>"
+```
+
+Split tasks into independent **file groups** (e.g. data layer vs. UI layer). Build only once after both complete — the compiler catches any cross-group conflicts.
+
+Parallelize when:
+- Task spans 4+ files that divide cleanly into independent groups
+- Groups share no new symbols introduced in the same task
+
+Don't parallelize when:
+- Group B imports new types/functions that Group A defines in the same task
+- Task is under ~4 files (overhead outweighs benefit)
 
 ---
 
