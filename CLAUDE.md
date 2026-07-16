@@ -46,3 +46,7 @@ Restart Claude Code, run `/skills`, then exercise the delegation prompt. If Step
 ## Editing guidance
 
 Prefer narrow documentation edits over broad rewrites. Preserve exact flag names, command examples, and security language. The Codex binary path in `SKILL.md` is machine-specific; document it clearly but do not generalize it as a portable default. Commit messages should follow the existing pattern: short, imperative, and sentence case.
+
+## Relationship to agent_skills
+
+This repo remains canonical for `codex-delegate` and `gemini-delegate` — edit the skills here as before. `agent_skills/registry.yaml` lists this repo as an upstream, and `agent_skills/sync.sh --vendor` copies these skills into `agent_skills/core/`, which then distributes them to the global agent dirs. After changing a skill here, run `./sync.sh --vendor` from `agent_skills/` so the vendored copies and everything downstream pick up the change.
