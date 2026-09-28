@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-This is a development repository for delegation skills. The root `SKILL.md` defines the Claude-to-Codex workflow, and `gemini-delegate/SKILL.md` defines a Codex-to-Gemini workflow for simple, verifiable tasks. `README.md` explains the Claude skill, while `settings.json` is the example permission file copied to `~/.claude/settings.json`. `CLAUDE.md` and this file should stay aligned when conventions change. Local-only Claude overrides belong under `.claude/` and should not drive repo-wide behavior.
+This is a development repository for delegation skills. The root `SKILL.md` defines the Claude-to-Codex workflow, and `gemini-delegate/SKILL.md` defines a Codex-to-Antigravity CLI (`agy`, Gemini 3.8 Flash) workflow for simple, verifiable tasks. `README.md` explains the Claude skill, while `settings.json` is the example permission file copied to `~/.claude/settings.json`. `CLAUDE.md` and this file should stay aligned when conventions change. Local-only Claude overrides belong under `.claude/` and should not drive repo-wide behavior.
 
 ## Build, Test, and Development Commands
 

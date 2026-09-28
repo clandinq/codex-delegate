@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working in this repository.
 
 ## Project overview
 
-This is a documentation-first development repo for delegation skills. The root `SKILL.md` covers the Claude Code to OpenAI Codex handoff, and `gemini-delegate/SKILL.md` covers a Codex to Gemini CLI handoff for small, testable tasks. Most changes land in skill markdown files plus supporting docs; there is no build system or automated test suite.
+This is a documentation-first development repo for delegation skills. The root `SKILL.md` covers the Claude Code to OpenAI Codex handoff, and `gemini-delegate/SKILL.md` covers a Codex to Antigravity CLI (`agy`) handoff (Gemini 3.8 Flash) for small, testable tasks. Most changes land in skill markdown files plus supporting docs; there is no build system or automated test suite.
 
 ## Repository structure
 
@@ -12,7 +12,7 @@ This is a documentation-first development repo for delegation skills. The root `
 delegator/
 ├── SKILL.md                  # Claude Code skill for delegating to Codex
 ├── gemini-delegate/
-│   └── SKILL.md             # Codex skill for delegating simple tasks to Gemini
+│   └── SKILL.md             # Codex skill for delegating simple tasks to Antigravity CLI (agy, Gemini 3.8 Flash)
 ├── README.md                # User-facing docs for the Claude skill
 ├── settings.json            # Example ~/.claude/settings.json permissions
 ├── AGENTS.md                # Contributor guide for human and AI collaborators
