@@ -1,17 +1,24 @@
 ---
 name: codex-delegate
 description: >
-  Use this skill whenever you are about to begin implementing code changes,
-  when a user has approved a plan and implementation is starting, or when
-  the user exits plan mode and wants to proceed. This skill offers to
-  delegate the execution phase to the OpenAI Codex CLI to conserve Claude tokens.
-  Trigger phrases: "proceed", "implement", "go ahead", "execute the plan",
-  "approved", "looks good", "do it".
+  Claude Code-only skill for delegating implementation to the OpenAI Codex CLI.
+  Use this skill only when the active agent is Claude Code and Claude is about
+  to begin implementing code changes, a user has approved a plan and
+  implementation is starting, or the user exits plan mode and wants to proceed.
+  Do not use this skill when the active agent is Codex, Gemini, or any
+  non-Claude agent. Trigger phrases for Claude Code: "proceed", "implement",
+  "go ahead", "execute the plan", "approved", "looks good", "do it".
 ---
 
 # codex-delegate
 
 Delegate code execution to OpenAI Codex CLI. Claude plans and reviews; Codex writes files and runs commands.
+
+## Agent guard
+
+Use this skill only when you are Claude Code.
+
+If you are Codex, Gemini, or another non-Claude agent, stop using this skill and proceed with the native workflow.
 
 ## Workflow
 
