@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working in this repository.
 
 ## Project overview
 
-This is a documentation-first development repo for delegation skills. The root `SKILL.md` covers the Claude Code to OpenAI Codex handoff, and `gemini-delegate/SKILL.md` covers a Codex to Antigravity CLI (`agy`) handoff (Gemini 3.8 Flash) for small, testable tasks. Most changes land in skill markdown files plus supporting docs; there is no build system or automated test suite.
+This is a documentation-first development repo for delegation skills. The root `SKILL.md` covers the Claude Code to OpenAI Codex handoff, and `gemini-delegate/SKILL.md` covers a Codex or Claude Code to Antigravity CLI (`agy`) handoff (Gemini 3.8 Flash) for small, testable tasks. Most changes land in skill markdown files plus supporting docs; there is no build system or automated test suite.
 
 ## Repository structure
 
@@ -12,7 +12,7 @@ This is a documentation-first development repo for delegation skills. The root `
 delegator/
 ├── SKILL.md                  # Claude Code skill for delegating to Codex
 ├── gemini-delegate/
-│   └── SKILL.md             # Codex skill for delegating simple tasks to Antigravity CLI (agy, Gemini 3.8 Flash)
+│   └── SKILL.md             # Codex/Claude Code skill for delegating simple tasks to Antigravity CLI (agy, Gemini 3.8 Flash)
 ├── README.md                # User-facing docs for the Claude skill
 ├── settings.json            # Example ~/.claude/settings.json permissions
 ├── AGENTS.md                # Contributor guide for human and AI collaborators
@@ -30,7 +30,7 @@ The root `SKILL.md` defines the six-step Claude to Codex path:
 5. Run `codex exec` with `--sandbox workspace-write --full-auto`
 6. Review the diff and check for deny-list violations
 
-Keep shared safety language synchronized across `SKILL.md`, `gemini-delegate/SKILL.md`, `README.md`, `AGENTS.md`, and this file.
+Keep shared safety language synchronized across `SKILL.md`, `gemini-delegate/SKILL.md`, `README.md`, `AGENTS.md`, and this file. Shared safety language includes each skill's Agent guard (which agents may invoke it) and the HARD CONSTRAINTS deny list that is enforced in the delegated prompt and re-checked in the post-run review.
 
 ## Validation
 
