@@ -2,17 +2,19 @@
 name: gemini-delegate
 description: >
   Use this skill when the user explicitly wants Gemini or the Antigravity CLI
-  (`agy`, formerly Gemini CLI), or when a coding task is simple, localized,
-  and easy to verify and can be safely delegated from Codex or Claude Code to
-  Gemini. Best for bounded implementation tasks with clear success checks,
-  such as a small bug fix, one focused test addition, or a narrow
-  documentation/code cleanup. Do not use this skill when the active agent is
-  Gemini or the Antigravity CLI.
+  (`agy`, formerly Gemini CLI), or when a coding task is one you would
+  otherwise hand to a Sonnet subagent: a well-specified implementation step
+  with a clear spec and a concrete success check, such as a bug fix, a
+  feature slice from an approved plan, a test suite for one module, or a
+  multi-file refactor with a defined target. The task must be completable
+  with workspace file edits plus only the shell commands already allowed in
+  agy's settings. Do not use this skill when the active agent is Gemini or
+  the Antigravity CLI.
 ---
 
 # gemini-delegate
 
-Delegate simple, verifiable implementation work from the calling agent (Codex or Claude Code) to Gemini. The backend is the Antigravity CLI (`agy`, formerly Gemini CLI) running Gemini 3.8 Flash (High).
+Delegate well-specified implementation work from the calling agent (Codex or Claude Code) to Gemini: the kind of step you would otherwise give a Sonnet subagent. The backend is the Antigravity CLI (`agy`, formerly Gemini CLI) running Gemini 4 Hydrogen (High).
 
 ## Agent guard
 
@@ -26,17 +28,17 @@ Requires `agy` >= 1.5.13 (check with `agy --version`). Run `agy update` if it is
 
 ## Use this skill only when
 
-- The task is narrow and local, usually 1 to 3 files or one tightly related change.
-- Success is easy to verify with a single test, lint command, or concrete file diff.
-- The user explicitly asked to use Gemini, or delegation is the fastest safe path.
-- The task does not involve secrets, production deploys, schema migrations, credential changes, or broad refactors.
+- The user explicitly asked to use Gemini, or the task is one you would delegate to a Sonnet subagent: the spec is clear enough that Gemini makes local implementation choices, not design decisions.
+- Success is concrete: a test or lint command you will run yourself afterwards, or a diff you can check against the spec.
+- Gemini can finish the task within headless agy's permissions: workspace file reads and writes, plus only the shell commands already listed in `permissions.allow` in `~/.gemini/antigravity-cli/settings.json`. Any other command is soft-denied and ends up in `.denied_actions`.
+- The task does not involve secrets, production deploys, schema migrations, or credential changes.
 
 ## Do not use this skill when
 
-- The task spans many files or needs architectural judgment across the codebase.
+- The task needs architectural judgment across the codebase, or the spec is still open.
 - Verification is ambiguous or depends on manual UI inspection only.
 - The repository has unexpected dirty changes that affect the target files.
-- The task needs commands Gemini should not run automatically.
+- Finishing the task needs commands that are not already allowlisted, such as installing packages, network access, a build or test that isn't allowlisted, or files outside the repo without `--add-dir`. Do the task locally, or ask the user for a narrow allow rule before delegating.
 
 ## Step 1 - Confirm the task is a good fit
 
@@ -44,9 +46,9 @@ Restate the task in one short paragraph: what Gemini should change, which files 
 
 If the user did not explicitly ask for Gemini, ask once:
 
-> Delegate this simple implementation task to Gemini (Antigravity CLI)? (yes / no)
+> Delegate this implementation task to Gemini (Antigravity CLI)? (yes / no)
 
-If the task is not clearly simple and verifiable, do not delegate.
+If you would not give this task to a Sonnet subagent, or it cannot finish within agy's current permissions, do not delegate.
 
 Before delegating, record a baseline with `git status --porcelain` and save it (e.g. to a temp file) so Step 5 can compare against it:
 
@@ -121,7 +123,7 @@ Run from the repo root. Prefer sandboxed, non-interactive execution. Write the p
 PROMPT_FILE=$(mktemp) OUT=$(mktemp) ERR=$(mktemp)
 # write the Step 3 prompt into "$PROMPT_FILE" (e.g. with a quoted heredoc: cat > "$PROMPT_FILE" <<'EOF' ... EOF)
 agy -p "$(cat "$PROMPT_FILE")" \
-  --model gemini-3.8-flash-high \
+  --model gemini-4-hydrogen-high \
   --effort high \
   --mode accept-edits \
   --sandbox \
